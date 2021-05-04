@@ -71,6 +71,10 @@ function populate_database {
     ## Note, from the manual: The base name of the text file MUST be
     ## the name of the table that should be used!
     for dumpfile in ./*.txt.gz; do
+	if [ "$dumpfile" == "dna.txt.gz" ]; then
+	    echo "Skipping DNA for now"
+	    continue
+	fi
         echo "Using data from '$dumpfile'"
         mkfifo "${dumpfile/.gz/}.pipe"
         gunzip -c "$dumpfile" >> "${dumpfile/.gz/}.pipe" &
