@@ -1,0 +1,35 @@
+version: "3.3"
+
+## TODO: Work out how to create a sekret password for the root user.
+## TODO: Create a non-root user (and password) to load the data.
+## TODO: Handle re-running the script (e.g. options to control what
+##       happens when a database already exits).
+## TODO: Dump data back out of 5.7 to a version 8 database, or update
+##       INPLACE, e.g. https://mysqlserverteam.com/inplace-u
+## TODO: Make data directories configurable.
+## TODO: Check in to a docker place...
+## TODO: Check in to a gitty place...
+## TODO: Run on Complex2 to build the Ensembl database.
+
+services:
+
+  mysql:
+    image: mysql:5.7
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --show_compatibility_56
+    restart: always
+    environment:
+       MYSQL_ROOT_PASSWORD: IuraetuxuoN7du8Iethei4phie1aeth2
+## Seems this would be better...
+#      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - ${HOME}/BiO/Data/Ensembl/MySQL-DATADIR:/var/lib/mysql
+
+  ensembl-loader:
+    build: .
+    volumes:
+      - ${HOME}/BiO/Data/Ensembl:/BiO/Data/Ensembl
+    depends_on:
+      - "mysql"
+
