@@ -1,4 +1,4 @@
-version: "3.3"
+version: "2.0"
 
 ## TODO: Work out how to create a sekret password for the root user.
 ## TODO: Create a non-root user (and password) to load the data.
