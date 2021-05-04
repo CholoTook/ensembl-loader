@@ -22,7 +22,7 @@ ENSEMBL_DIR=/BiO/Data/Ensembl/pub
 
 # This allows the mysql instance to come up before we start trying to
 # use it...
-mycmd="mysqladmin ping -h '$MYSQL_HOST'"
+mycmd="mysqladmin ping -h '$MYSQL_HOST' &> /dev/null"
 until eval "$mycmd"; do
     echo "Waiting for MySQL to come up"
     sleep 2
@@ -71,8 +71,8 @@ function populate_database {
     ## Note, from the manual: The base name of the text file MUST be
     ## the name of the table that should be used!
     for dumpfile in ./*.txt.gz; do
-	if [ "$dumpfile" == "dna.txt.gz" ]; then
-	    echo "Skipping DNA for now"
+	if [ "$dumpfile" == "./dna.txt.gz" ]; then
+	    echo "Skipping DNA for now..."
 	    continue
 	fi
         echo "Using data from '$dumpfile'"
@@ -82,7 +82,8 @@ function populate_database {
            --fields-terminated-by='\t' \
                     --fields-escaped-by=\\ \
                     --local --delete \
-                    "$1" "${dumpfile/.gz/}.pipe"
+                    "$1" "${dumpfile/.gz/}.pipe" \
+	    || rm -f "${dumpfile/.gz/}.pipe"
         rm -f "${dumpfile/.gz/}.pipe"
     done
     echo "Done"
